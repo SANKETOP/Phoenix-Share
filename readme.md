@@ -39,7 +39,7 @@ Before running the system, ensure that you have the following installed:
 
 ## Customization
 
-- You can customize the upload limit by modifying the `uploadLimit` in `config.json file`.
+- You can customize the upload limit by modifying the `uploadLimit` variable.
 - To change the server port, update the port number in `config.json` file.
 - You can customize the  `username` and `password` by modifying the `config.json` file.
 ## License
