@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Page</title>
+  <style>
+    body {
+      background-color: #f2f2f2;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .login-container {
+      margin: 0 auto;
+      width: 300px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      padding: 20px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .error-message {
+      color: red;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form action="/login" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required><br>
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required><br>
+
+      <button type="submit">Login</button>
+
+      <p class="error-message">{{ errorMessage }}</p>
+    </form>
+  </div>
+</body>
+</html>

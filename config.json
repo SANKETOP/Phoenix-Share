@@ -1,0 +1,7 @@
+{
+  "username": "your-username",
+  "password": "your-username",
+  "uploadLimit": 150,
+  "domain": "example.com",
+  "port": 3000
+}
