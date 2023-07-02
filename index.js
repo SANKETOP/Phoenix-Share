@@ -10,7 +10,7 @@ const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
 // Set the upload limit (default: 200MB)
-const uploadLimit = config.uploadLimit || 200 * 1024 * 1024;
+const uploadLimit = process.env.UPLOAD_LIMIT || 200 * 1024 * 1024;
 app.use(fileUpload({
   limits: { fileSize: uploadLimit }
 }));

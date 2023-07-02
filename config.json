@@ -1,7 +1,6 @@
 {
   "username": "your-username",
   "password": "your-username",
-  "uploadLimit": 150,
   "domain": "localhost:3000",
   "port": 3000
 }
