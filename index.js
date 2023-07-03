@@ -5,7 +5,11 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const qrCode = require('qrcode');
-const config = require('./config.json')
+const config = require('./config.json');
+const db = require('quick.db');
+const bcrypt = require('bcrypt');
+
+
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -14,7 +18,6 @@ const uploadLimit = 200 * 1024 * 1024;
 app.use(fileUpload({
   limits: { fileSize: uploadLimit }
 }));
-
 
 // Serve the login page
 app.get('/', (req, res) => {
@@ -25,31 +28,73 @@ app.get('/', (req, res) => {
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
 
-  // Read the login credentials from config.json
-  fs.readFile(path.join(__dirname, 'config.json'), 'utf8', (err, data) => {
+  // Retrieve the user object from the database
+  const user = db.get(`users.${username}`);
+
+  // Check if the user exists
+  if (!user) {
+    return res.status(400).send('Invalid username or password');
+  }
+
+  // Compare the provided password with the stored hashed password
+  bcrypt.compare(password, user.password, (err, result) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
     }
 
-    try {
-      const config = JSON.parse(data);
-
-      // Check if the provided credentials match the ones in config.json
-      if (username === config.username && password === config.password) {
-        // Redirect to the upload page if the login is successful
-        return res.redirect('/upload');
-      } else {
-        // Show an error message if the login is unsuccessful
-        return res.status(401).send('Invalid username or password');
-      }
-    } catch (err) {
-      console.error(err);
-      return res.status(500).send('Internal Server Error');
+    if (result) {
+      // Passwords match, user is authenticated
+      return res.redirect('/upload');
+    } else {
+      // Passwords do not match
+      return res.status(400).send('Invalid username or password');
     }
   });
 });
 
+// Serve the account creation page
+app.get('/create-account', (req, res) => {
+  res.sendFile(path.join(__dirname, 'create-account.html'));
+});
+
+// Handle account creation form submission
+app.post('/create-account', (req, res) => {
+  const { username, password } = req.body;
+
+  // Check if the username is already taken
+  if (db.has(`users.${username}`)) {
+    return res.status(400).send('Username already taken');
+  }
+
+  // Generate a salt and hash the password
+  bcrypt.genSalt(10, (err, salt) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    bcrypt.hash(password, salt, (err, hash) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+
+      // Create a new user object with the hashed password
+      const user = {
+        username: username,
+        password: hash
+      };
+
+      // Store the user object in the database
+      db.set(`users.${username}`, user);
+
+      // Redirect to the login page after successful account creation
+      res.redirect('/');
+    });
+  });
+});
+    
 // Serve the upload form page
 app.get('/upload', (req, res) => {
   res.sendFile(path.join(__dirname, 'upload.html'));
@@ -126,7 +171,9 @@ app.post('/upload', async (req, res) => {
       </script>
     `);
   });
+  
 });
+
 
 // Handle file download
 app.get('/download/:fileName', (req, res) => {

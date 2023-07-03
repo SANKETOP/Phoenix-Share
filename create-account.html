@@ -2,11 +2,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="description" content="Login page for Phoenix Share">
+  <meta name="description" content="Account creation page for Phoenix Share">
   <meta name="keywords" content="HTML, CSS, JavaScript">
-  <meta name="author" content="Pheonix">
+  <meta name="author" content="Phoenix">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login Page</title>
+  <title>Create Account</title>
   <style>
     body {
       background-color: #f2f2f2;
@@ -14,7 +14,7 @@
       text-align: center;
     }
 
-    .login-container {
+    .create-account-container {
       margin: 0 auto;
       width: 300px;
       background-color: #ffffff;
@@ -63,20 +63,20 @@
   </style>
 </head>
 <body>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form action="/login" method="post">
+  <div class="create-account-container">
+    <h2>Create Account</h2>
+    <form action="/create-account" method="post">
       <label for="username">Username:</label>
       <input type="text" id="username" name="username" required><br>
 
       <label for="password">Password:</label>
       <input type="password" id="password" name="password" required><br>
 
-      <button type="submit">Login</button>
+      <button type="submit">Create Account</button>
 
       <p class="error-message">{{ errorMessage }}</p>
     </form>
-    <button onclick="window.location.href='/create-account'">Create Account</button>
   </div>
 </body>
-</html>
+  </html>
+  
